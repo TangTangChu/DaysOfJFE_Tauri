@@ -1,0 +1,9 @@
+dist
+node_modules
+public
+*.log
+.env
+.idea
+.vscode
+debug
+src-tauri

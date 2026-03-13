@@ -1,0 +1,182 @@
+meta:
+  scriptId: prologue
+  title: 序章
+  schemaVersion: 2.0.0
+
+variables:
+  route.locked: false
+  affinity.heroine: 0
+  knowledge.engine: false
+
+scenes:
+  - id: scene_opening
+    title: 开场
+    entry: c_0002
+    commands:
+      - id: c_0002
+        type: narration
+        payload:
+          text: '这里是世界的尽头，也是一切开始的地方。'
+        next: c_0003
+
+      - id: c_0003
+        type: narration
+        payload:
+          text: '四周弥漫着如雾般的纯白，安静得仿佛能听见时间的流逝。'
+        next: c_0004
+
+      - id: c_0004
+        type: dialogue
+        payload:
+          speakerId: system
+          speakerName: 系统
+          text: '欢迎来到视觉小说的测试基座。'
+        next: c_0005
+
+      - id: c_0005
+        type: dialogue
+        payload:
+          speakerId: system
+          speakerName: 系统
+          text: '如你所见，这里什么也没有。但这正是『创造』所必须的留白。'
+        next: c_0006
+
+      - id: c_0006
+        type: choice_show
+        payload:
+          choiceId: choice_start
+          prompt: '面对这片纯白，你的想法是：'
+          options:
+            - id: opt_start_1
+              text: '似乎有点无聊'
+              to: branch_bored
+            - id: opt_start_2
+              text: '我该如何开始？'
+              to: branch_curious
+      - id: branch_bored
+        type: dialogue
+        payload:
+          speakerId: system
+          speakerName: 系统
+          text: '无聊吗？那是因为尚未有『灵魂』被注入其中。'
+        next: c_0010
+
+      - id: c_0010
+        type: narration
+        payload:
+          text: '正当系统如此说道时，纯白的空间中忽然泛起了一丝涟漪。'
+        next: char_appear
+      - id: branch_curious
+        type: set
+        payload:
+          key: knowledge.engine
+          value: true
+        next: c_0020
+
+      - id: c_0020
+        type: dialogue
+        payload:
+          speakerId: system
+          speakerName: 系统
+          text: '很好。探索的欲望是创造的基石。在构建你的世界之前，我们先来测试一下引擎的核心调度……'
+        next: c_0021
+
+      - id: c_0021
+        type: narration
+        payload:
+          text: '系统的话音刚落，一个轻盈的脚步声从身后传来。'
+        next: char_appear
+
+      - id: char_appear
+        type: dialogue
+        payload:
+          speakerId: heroine
+          speakerName: 少女
+          text: '……这里就是新搭建的舞台吗？'
+        next: c_0031
+
+      - id: c_0031
+        type: dialogue
+        payload:
+          speakerId: heroine
+          speakerName: 少女
+          text: '虽然现在的我连立绘都还没有，但只要有这段文字，我就确切地存在着。'
+        next: c_0032
+
+      - id: c_0032
+        type: choice_show
+        payload:
+          choiceId: choice_heroine
+          prompt: '向少女搭话：'
+          options:
+            - id: opt_h_1
+              text: '很高兴见到你'
+              to: branch_greet
+            - id: opt_h_2
+              text: '抱歉，我还得继续写代码'
+              to: branch_work
+      - id: branch_greet
+        type: set
+        payload:
+          key: affinity.heroine
+          value: 1
+        next: c_0040
+
+      - id: c_0040
+        type: dialogue
+        payload:
+          speakerId: heroine
+          speakerName: 少女
+          text: '嗯，我也是。期待着在完整的视觉表现中，与你正式相遇的那一天。'
+        next: ending_phase
+      - id: branch_work
+        type: dialogue
+        payload:
+          speakerId: heroine
+          speakerName: 少女
+          text: '真是个不解风情的家伙……不过，既然是创造者的话，我就稍微宽容一点吧。'
+        next: ending_phase
+      - id: ending_phase
+        type: narration
+        payload:
+          text: '测试剧本的流程到此已接近尾声。在这段较长的文本中，你可以随时测试存档、读档、自动播放与右键隐藏等功能。'
+        next: c_0051
+
+      - id: c_0051
+        type: dialogue
+        payload:
+          speakerId: system
+          speakerName: 系统
+          text: '那么，所有的测试确认完毕了吗？'
+        next: c_0052
+
+      - id: c_0052
+        type: choice_show
+        payload:
+          choiceId: choice_end
+          prompt: '确认退出测试吗？'
+          options:
+            - id: opt_end_1
+              text: '是的，一切正常'
+              to: branch_end_true
+            - id: opt_end_2
+              text: '再等等，我想返回主界面'
+              to: branch_end_false
+
+      - id: branch_end_true
+        type: end
+        payload:
+          endingKey: demo_end
+
+      - id: branch_end_false
+        type: dialogue
+        payload:
+          speakerId: system
+          speakerName: 系统
+          text: '了解。既然如此，请通过右下角的快捷菜单返回『标题』界面吧。'
+        next: c_0060
+
+      - id: c_0060
+        type: end
+        payload:
+          endingKey: demo_end

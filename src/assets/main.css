@@ -1,0 +1,274 @@
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'Sarasa UI SC';
+  src: url('./fonts/SarasaUiSC-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Source Han Serif SC';
+  src: url('./fonts/SourceHanSerifSC-Heavy.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --color-md-primary: #d4849a;
+  --color-md-on-primary: #ffffff;
+  --color-md-primary-container: #ffd9e2;
+  --color-md-on-primary-container: #3a071d;
+
+  --color-md-secondary: #74565f;
+  --color-md-on-secondary: #ffffff;
+  --color-md-secondary-container: #ffd9e2;
+  --color-md-on-secondary-container: #2b151c;
+
+  --color-md-surface: #fff8f8;
+  --color-md-surface-dim: #e8d6da;
+  --color-md-surface-container-lowest: #ffffff;
+  --color-md-surface-container-low: #fdfafb;
+  --color-md-surface-container: #f7eef0;
+  --color-md-surface-container-high: #f1e8ea;
+  --color-md-surface-container-highest: #ebe2e4;
+
+  --color-md-on-surface: #201a1c;
+  --color-md-on-surface-variant: #524347;
+
+  --color-md-outline: #847377;
+  --color-md-outline-variant: #d6c2c6;
+
+  --color-gal-text: var(--color-md-on-surface);
+  --color-gal-text-sub: var(--color-md-on-surface-variant);
+  --color-gal-text-pink: var(--color-md-primary);
+  --color-gal-text-pink-hover: #b05672;
+  --color-gal-text-light: var(--color-md-outline);
+
+  --color-gal-bg-base: var(--color-md-surface);
+  --color-gal-bg-panel: var(--color-md-surface-container);
+  --color-gal-bg-panel-hover: var(--color-md-surface-container-high);
+
+  --color-gal-border: var(--color-md-outline-variant);
+  --color-gal-border-hover: var(--color-md-primary);
+
+  --font-serif: 'Source Han Serif SC', 'Noto Serif SC', serif;
+  --font-sans: 'Sarasa UI SC', 'Noto Sans SC', 'PingFang SC', sans-serif;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #app {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-gal-text);
+    background: var(--color-gal-bg-base);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background: var(--color-md-primary-container);
+    color: var(--color-md-on-primary-container);
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-md-outline-variant);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-md-outline);
+  }
+}
+
+@layer components {
+  .gal-panel {
+    background: var(--color-gal-bg-panel);
+    border-radius: 24px;
+    color: var(--color-md-on-surface);
+    transition: background 0.2s cubic-bezier(0.2, 0, 0, 1);
+    border: none;
+  }
+
+  .gal-panel-glass {
+    background: color-mix(
+      in srgb,
+      var(--color-md-surface-container) 85%,
+      transparent
+    );
+    backdrop-filter: blur(16px);
+    border-radius: 24px;
+    color: var(--color-md-on-surface);
+    border: none;
+  }
+
+  .gal-ornament {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .gal-ornament::before,
+  .gal-ornament::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--color-md-outline-variant);
+  }
+
+  .gal-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 8px 24px;
+    background: var(--color-md-primary-container);
+    color: var(--color-md-on-primary-container);
+    border: none;
+    border-radius: 24px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+    user-select: none;
+  }
+
+  .gal-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--color-md-on-surface);
+    opacity: 0;
+    transition: opacity 0.2s cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .gal-btn:hover::before {
+    opacity: 0.08;
+  }
+
+  .gal-btn:active::before {
+    opacity: 0.12;
+  }
+
+  .gal-btn-primary {
+    background: var(--color-md-primary);
+    color: var(--color-md-on-primary);
+  }
+
+  .gal-btn-primary::before {
+    background: var(--color-md-on-primary);
+  }
+
+  .gal-btn-text {
+    background: transparent;
+    color: var(--color-md-primary);
+    padding: 0 16px;
+  }
+
+  .gal-btn-text::before {
+    background: var(--color-md-primary);
+  }
+
+  .gal-range {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 16px;
+    background: var(--color-md-surface-container-highest);
+    border-radius: 8px;
+    outline: none;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .gal-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 4px;
+    height: 44px;
+    border-radius: 2px;
+    background: var(--color-md-primary);
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+    box-shadow: 0 0 0 0 rgba(212, 132, 154, 0.12);
+  }
+
+  .gal-range::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 8px rgba(212, 132, 154, 0.12);
+  }
+
+  .gal-toggle {
+    position: relative;
+    width: 52px;
+    height: 32px;
+    border-radius: 16px;
+    background: var(--color-md-surface-container-highest);
+    border: 2px solid var(--color-md-outline);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+    display: inline-block;
+    box-sizing: border-box;
+  }
+
+  .gal-toggle::after {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-md-outline);
+    transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  }
+
+  .gal-toggle:hover::after {
+    background: var(--color-md-on-surface-variant);
+    box-shadow: 0 0 0 8px rgba(82, 67, 71, 0.08);
+  }
+
+  .gal-toggle.active {
+    background: var(--color-md-primary);
+    border-color: var(--color-md-primary);
+  }
+
+  .gal-toggle.active::after {
+    width: 24px;
+    height: 24px;
+    top: 2px;
+    left: 22px;
+    background: var(--color-md-on-primary);
+  }
+
+  .gal-toggle.active:hover::after {
+    background: var(--color-md-primary-container);
+    box-shadow: 0 0 0 8px rgba(212, 132, 154, 0.12);
+  }
+}
