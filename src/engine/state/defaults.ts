@@ -111,5 +111,6 @@ export function createInitialEngineState(settings: GameSettings): EngineState {
       fastForward: false,
       uiHidden: false,
     },
+    callStack: [],
   }
 }

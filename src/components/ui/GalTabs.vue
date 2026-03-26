@@ -34,7 +34,7 @@ defineEmits<{
         >{{ tab.sub }}</span
       >
       <div
-        class="absolute -bottom-px left-1/5 w-3/5 h-[2px] bg-transparent transition-all duration-300 ease-in-out rounded-t-sm group-[.active]:left-1/10 group-[.active]:w-4/5 group-[.active]:h-[3px] group-[.active]:bg-gal-text-pink"
+        class="absolute -bottom-px left-1/5 w-3/5 h-0.5 bg-transparent transition-all duration-300 ease-in-out rounded-t-sm group-[.active]:left-1/10 group-[.active]:w-4/5 group-[.active]:h-0.75 group-[.active]:bg-gal-text-pink"
       ></div>
     </button>
   </nav>

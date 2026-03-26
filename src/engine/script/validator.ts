@@ -16,6 +16,7 @@ const COMMAND_TYPES: Set<ScriptCommandType> = new Set<ScriptCommandType>([
   'label',
   'call',
   'return',
+  'script_jump',
   'end',
   'set',
   'inc',
@@ -220,6 +221,16 @@ function validateByType(
             allowed: ['interrupt', 'queue', 'ignore'],
           }),
         )
+      }
+      break
+    }
+    case 'script_jump': {
+      expectId(payload.scriptId, `${path}.scriptId`, errors)
+      if (payload.sceneId !== undefined) {
+        expectId(payload.sceneId, `${path}.sceneId`, errors)
+      }
+      if (payload.commandId !== undefined) {
+        expectId(payload.commandId, `${path}.commandId`, errors)
       }
       break
     }

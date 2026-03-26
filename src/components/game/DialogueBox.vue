@@ -1,9 +1,19 @@
 <template>
   <div
-    class="absolute bottom-0 left-0 right-0 px-6 pb-6 z-20"
+    class="z-20"
+    :class="
+      layout === 'overlay'
+        ? 'absolute bottom-0 left-0 right-0 px-6 pb-6'
+        : 'w-full px-1 sm:px-2 pb-0'
+    "
     @click.stop="emit('next')"
   >
-    <div class="relative max-w-225 mx-auto px-8 py-6 gal-panel min-h-35">
+    <div
+      class="relative max-w-225 mx-auto px-8 py-6 gal-panel min-h-35"
+      :class="
+        layout === 'docked' ? 'shadow-[0_18px_44px_rgba(80,36,53,0.16)]' : ''
+      "
+    >
       <div
         class="absolute top-0 left-8 right-8 h-0.5 bg-gal-text-pink/30 pointer-events-none"
       ></div>
@@ -43,12 +53,18 @@
 </template>
 
 <script setup lang="ts">
-defineProps<{
-  speakerName?: string
-  displayText: string
-  isTyping: boolean
-  choiceOpen: boolean
-}>()
+withDefaults(
+  defineProps<{
+    speakerName?: string
+    displayText: string
+    isTyping: boolean
+    choiceOpen: boolean
+    layout?: 'overlay' | 'docked'
+  }>(),
+  {
+    layout: 'overlay',
+  },
+)
 
 const emit = defineEmits<{
   (e: 'next'): void

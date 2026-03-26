@@ -64,6 +64,10 @@ function goSettings() {
   navigateTo('settings')
 }
 
+function goEditor() {
+  navigateTo('editor')
+}
+
 async function exitGame() {
   if ('__TAURI__' in window) {
     const { exit } = await import('@tauri-apps/plugin-process')
@@ -90,7 +94,7 @@ function particleStyle(i: number) {
 
 <template>
   <div
-    class="relative w-full h-full flex flex-col items-center justify-center overflow-hidden bg-gal-bg-base font-sans"
+    class="relative w-full h-full flex flex-col items-center justify-center overflow-hidden bg-gal-bg-base font-sans px-6"
   >
     <div class="absolute inset-0 bg-gal-bg-base pointer-events-none"></div>
     <div class="absolute inset-0 pointer-events-none overflow-hidden">
@@ -102,15 +106,15 @@ function particleStyle(i: number) {
       ></div>
     </div>
     <div
-      class="relative z-10 flex flex-row items-center justify-around w-full max-w-250 px-10 animate-[fadeInBlur_1.5s_ease-out_both]"
+      class="relative z-10 flex flex-row items-center justify-around w-full max-w-384 px-12 xl:px-18 scale-[1.06] origin-center animate-[fadeInBlur_1.5s_ease-out_both]"
     >
-      <div class="flex flex-col items-start gap-3 flex-1">
+      <div class="flex flex-col items-start gap-4 flex-1 max-w-2xl">
         <span
-          class="text-sm tracking-[0.4em] text-gal-text-sub font-sans uppercase"
+          class="text-base tracking-[0.42em] text-gal-text-sub font-sans uppercase"
           >A Visual Novel Experience</span
         >
         <h1
-          class="font-serif text-[64px] font-bold text-gal-text tracking-widest leading-tight"
+          class="font-serif text-[clamp(4.5rem,7vw,5.75rem)] font-bold text-gal-text tracking-[0.12em] leading-[1.04]"
         >
           <span class="text-gal-text-pink">Days</span>of<span
             class="text-gal-text-pink"
@@ -118,15 +122,15 @@ function particleStyle(i: number) {
           >FE
         </h1>
         <span
-          class="text-base text-gal-text-sub tracking-[0.2em] italic font-serif"
+          class="text-lg text-gal-text-sub tracking-[0.24em] italic font-serif"
           >The Illusion of My</span
         >
       </div>
 
-      <nav class="flex flex-col items-end gap-3 flex-none">
+      <nav class="flex flex-col items-end gap-4 flex-none">
         <GalButton
           variant="text"
-          class="text-2xl items-end!"
+          class="text-[1.75rem] items-end!"
           @click="startGame"
           :class="{ 'pointer-events-none opacity-70': loading }"
         >
@@ -146,7 +150,7 @@ function particleStyle(i: number) {
 
         <GalButton
           variant="text"
-          class="text-2xl items-end!"
+          class="text-[1.75rem] items-end!"
           @click="continueGame"
           :class="{
             'pointer-events-none opacity-40': loading || !hasQuickSave,
@@ -167,7 +171,11 @@ function particleStyle(i: number) {
           </div>
         </GalButton>
 
-        <GalButton variant="text" class="text-2xl items-end!" @click="goSaves">
+        <GalButton
+          variant="text"
+          class="text-[1.75rem] items-end!"
+          @click="goSaves"
+        >
           <div class="flex flex-col items-end">
             <span
               class="tracking-[0.25em] font-serif transition-colors duration-400"
@@ -181,7 +189,7 @@ function particleStyle(i: number) {
 
         <GalButton
           variant="text"
-          class="text-2xl items-end!"
+          class="text-[1.75rem] items-end!"
           @click="goSettings"
         >
           <div class="flex flex-col items-end">
@@ -195,7 +203,27 @@ function particleStyle(i: number) {
           </div>
         </GalButton>
 
-        <GalButton variant="text" class="text-2xl items-end!" @click="exitGame">
+        <GalButton
+          variant="text"
+          class="text-[1.75rem] items-end!"
+          @click="goEditor"
+        >
+          <div class="flex flex-col items-end">
+            <span
+              class="tracking-[0.25em] font-serif transition-colors duration-400"
+              >剧本编辑</span
+            >
+            <span class="text-xs tracking-[0.3em] uppercase mt-1 opacity-60"
+              >Editor</span
+            >
+          </div>
+        </GalButton>
+
+        <GalButton
+          variant="text"
+          class="text-[1.75rem] items-end!"
+          @click="exitGame"
+        >
           <div class="flex flex-col items-end">
             <span
               class="tracking-[0.25em] font-serif transition-colors duration-400"
@@ -210,7 +238,7 @@ function particleStyle(i: number) {
     </div>
 
     <div
-      class="absolute bottom-6 right-8 text-xs text-gal-text-sub tracking-[0.15em] font-sans"
+      class="absolute bottom-8 right-10 text-sm text-gal-text-sub tracking-[0.18em] font-sans"
     >
       Version 0.1.0
     </div>

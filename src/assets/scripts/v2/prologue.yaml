@@ -16,13 +16,13 @@ scenes:
       - id: c_0002
         type: narration
         payload:
-          text: '这里是世界的尽头，也是一切开始的地方。'
+          text: '放学后的教室，总是比上课时安静得多。'
         next: c_0003
 
       - id: c_0003
         type: narration
         payload:
-          text: '四周弥漫着如雾般的纯白，安静得仿佛能听见时间的流逝。'
+          text: '斜阳从西侧的窗户透进来，把课桌椅的影子拉得细长。粉笔灰在光柱里懒洋洋地飘着，好像时间本身也放慢了脚步。'
         next: c_0004
 
       - id: c_0004
@@ -38,34 +38,36 @@ scenes:
         payload:
           speakerId: system
           speakerName: 系统
-          text: '如你所见，这里什么也没有。但这正是『创造』所必须的留白。'
+          text: '眼前这间教室空无一人，连椅子都整整齐齐地摆着。然而正是这份空荡，才是『故事』得以落脚的地方。'
         next: c_0006
 
       - id: c_0006
         type: choice_show
         payload:
           choiceId: choice_start
-          prompt: '面对这片纯白，你的想法是：'
+          prompt: '看着夕阳下空旷的教室，你心里浮现出的是：'
           options:
             - id: opt_start_1
-              text: '似乎有点无聊'
+              text: '放学了还留在这里，真无聊啊'
               to: branch_bored
             - id: opt_start_2
-              text: '我该如何开始？'
+              text: '……这一切，究竟从哪里开始？'
               to: branch_curious
+
       - id: branch_bored
         type: dialogue
         payload:
           speakerId: system
           speakerName: 系统
-          text: '无聊吗？那是因为尚未有『灵魂』被注入其中。'
+          text: '无聊吗？那是因为还没有人走进这间教室。故事从来都是因为『人』才开始的。'
         next: c_0010
 
       - id: c_0010
         type: narration
         payload:
-          text: '正当系统如此说道时，纯白的空间中忽然泛起了一丝涟漪。'
+          text: '话音刚落，走廊里传来了一阵轻轻的脚步声，由远及近。'
         next: char_appear
+
       - id: branch_curious
         type: set
         payload:
@@ -78,13 +80,13 @@ scenes:
         payload:
           speakerId: system
           speakerName: 系统
-          text: '很好。探索的欲望是创造的基石。在构建你的世界之前，我们先来测试一下引擎的核心调度……'
+          text: '好奇心，正是解开一切谜题的钥匙。在这间教室里藏着什么，我想你很快就会知道了——'
         next: c_0021
 
       - id: c_0021
         type: narration
         payload:
-          text: '系统的话音刚落，一个轻盈的脚步声从身后传来。'
+          text: '系统的话还没说完，教室的推拉门便发出了一声轻响。'
         next: char_appear
 
       - id: char_appear
@@ -92,7 +94,7 @@ scenes:
         payload:
           speakerId: heroine
           speakerName: 少女
-          text: '……这里就是新搭建的舞台吗？'
+          text: '……咦，还有人在啊。'
         next: c_0031
 
       - id: c_0031
@@ -100,21 +102,22 @@ scenes:
         payload:
           speakerId: heroine
           speakerName: 少女
-          text: '虽然现在的我连立绘都还没有，但只要有这段文字，我就确切地存在着。'
+          text: '我只是忘了取回放在讲台上的作业本……抱歉，打扰你了。虽然我现在连制服的样子都还没画好，但你能看见这句话，我就算是真实存在着的吧。'
         next: c_0032
 
       - id: c_0032
         type: choice_show
         payload:
           choiceId: choice_heroine
-          prompt: '向少女搭话：'
+          prompt: '要不要跟她说话？'
           options:
             - id: opt_h_1
-              text: '很高兴见到你'
+              text: '不，没关系。你经常放学后来这里吗？'
               to: branch_greet
             - id: opt_h_2
-              text: '抱歉，我还得继续写代码'
+              text: '（低头继续敲代码，假装没看见）'
               to: branch_work
+
       - id: branch_greet
         type: set
         payload:
@@ -127,19 +130,21 @@ scenes:
         payload:
           speakerId: heroine
           speakerName: 少女
-          text: '嗯，我也是。期待着在完整的视觉表现中，与你正式相遇的那一天。'
+          text: '……偶尔吧。夕阳西下的时候，这里特别安静，适合一个人待着。——等到有一天立绘和背景都画好了，也许我们可以在这里好好聊聊。'
         next: ending_phase
+
       - id: branch_work
         type: dialogue
         payload:
           speakerId: heroine
           speakerName: 少女
-          text: '真是个不解风情的家伙……不过，既然是创造者的话，我就稍微宽容一点吧。'
+          text: '……真是失礼的人啊。不过，忙于创造的人嘛，姑且原谅你了。'
         next: ending_phase
+
       - id: ending_phase
         type: narration
         payload:
-          text: '测试剧本的流程到此已接近尾声。在这段较长的文本中，你可以随时测试存档、读档、自动播放与右键隐藏等功能。'
+          text: '夕阳的橘色又深了几分，把两人的影子叠在了一起。测试流程已经接近尾声——在这段时间里，你可以试试存档、读档、自动播放，以及右键隐藏文字框等功能。'
         next: c_0051
 
       - id: c_0051
@@ -147,7 +152,7 @@ scenes:
         payload:
           speakerId: system
           speakerName: 系统
-          text: '那么，所有的测试确认完毕了吗？'
+          text: '那么，各项功能都确认过了吗？'
         next: c_0052
 
       - id: c_0052
@@ -157,10 +162,10 @@ scenes:
           prompt: '确认退出测试吗？'
           options:
             - id: opt_end_1
-              text: '是的，一切正常'
+              text: '嗯，一切正常'
               to: branch_end_true
             - id: opt_end_2
-              text: '再等等，我想返回主界面'
+              text: '再等一下，我想回主界面看看'
               to: branch_end_false
 
       - id: branch_end_true
@@ -173,7 +178,7 @@ scenes:
         payload:
           speakerId: system
           speakerName: 系统
-          text: '了解。既然如此，请通过右下角的快捷菜单返回『标题』界面吧。'
+          text: '明白了。请通过右下角的快捷菜单，返回『标题』界面吧。'
         next: c_0060
 
       - id: c_0060

@@ -55,6 +55,14 @@ function mergeSettings(
   }
 }
 
+function canCreateSaveFromState(state: EngineState): boolean {
+  return (
+    state.runtime.scriptId.trim().length > 0 &&
+    state.runtime.sceneId.trim().length > 0 &&
+    state.runtime.commandIndex >= 0
+  )
+}
+
 export class GalgameFacadeImpl implements GalgameFacade {
   private readonly runtime = new Runtime()
   private readonly persistence: PersistenceApi
@@ -82,6 +90,11 @@ export class GalgameFacadeImpl implements GalgameFacade {
 
   async shutdown(): Promise<void> {
     this.booted = false
+  }
+
+  async resetSession(): Promise<void> {
+    this.runtime.resetToIdle()
+    this.scriptLoaded = false
   }
 
   async loadScript(input: ScriptLoadInput): Promise<ScriptLoadResult> {
@@ -237,12 +250,19 @@ export class GalgameFacadeImpl implements GalgameFacade {
     slot: number,
     kind: SaveMeta['kind'],
   ): Promise<SaveMeta> {
+    const state = this.runtime.getState()
+    if (!canCreateSaveFromState(state)) {
+      throw {
+        code: 'RUNTIME_ILLEGAL_STATE',
+        message: '当前不在可存档的游戏流程中',
+      }
+    }
+
     const snapshot = this.runtime.snapshot()
     snapshot.contractVersion = CONTRACT_VERSION
     snapshot.snapshotVersion = SNAPSHOT_VERSION
     snapshot.checksum = await this.computeChecksum(snapshot)
 
-    const state = this.runtime.getState()
     const sceneTitle = state.runtime.sceneId || 'Unknown Scene'
 
     return this.persistence.saveSnapshot({

@@ -150,6 +150,15 @@ export interface EngineFlagState {
   uiHidden: boolean
 }
 
+export interface CallFrame {
+  scriptId: string
+  sceneId: string
+  commandId: string
+  commandIndex: number
+}
+
+export type ScriptResolver = (scriptId: string) => Promise<string>
+
 export interface EngineState {
   runtime: RuntimeCursorState
   stage: StageState
@@ -160,6 +169,7 @@ export interface EngineState {
   settings: GameSettings
   save: SaveRuntimeState
   flags: EngineFlagState
+  callStack: CallFrame[]
 }
 
 export interface RuntimeSnapshot {
@@ -266,6 +276,7 @@ export type RuntimeAction =
 export interface GalgameFacade {
   boot(): Promise<void>
   shutdown(): Promise<void>
+  resetSession(): Promise<void>
 
   loadScript(input: ScriptLoadInput): Promise<ScriptLoadResult>
   start(entry: StoryEntry): Promise<void>

@@ -86,6 +86,14 @@ export class Runtime {
     this.state.runtime.tick = 0
   }
 
+  resetToIdle(): void {
+    this.ir = null
+    this.pendingJumpId = null
+    this.pendingSceneId = null
+    this.state = createInitialEngineState(structuredClone(this.state.settings))
+    this.emit('engine.state.changed', { reset: true })
+  }
+
   start(sceneId?: string, commandId?: string): void {
     if (!this.ir) {
       throw new Error('RUNTIME_ILLEGAL_STATE: script not loaded')

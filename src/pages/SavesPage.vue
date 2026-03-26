@@ -17,7 +17,7 @@
           SAVE & LOAD
         </div>
       </header>
-      <div class="flex justify-center items-center gap-4 mb-6 shrink-0">
+      <div class="flex justify-center items-center gap-4 mb-5 shrink-0">
         <GalButton
           text="返回"
           subtext="Title"
@@ -29,7 +29,8 @@
           text="快速存档"
           subtext="Q.Save"
           layout="horizontal"
-          @click="facade.quickSave(0).then(refresh)"
+          :disabled="!canCreateSave"
+          @click="doQuickSave"
         />
         <GalButton
           text="快速读取"
@@ -44,11 +45,46 @@
         />
       </div>
 
+      <div class="shrink-0 mb-5">
+        <div class="flex items-center justify-between gap-4 px-3 mb-3">
+          <div class="text-xs tracking-[0.22em] text-gal-text-sub uppercase">
+            Manual Pages
+          </div>
+          <div
+            class="text-xs tracking-[0.18em] text-gal-text-pink/70 font-medium"
+          >
+            第 {{ currentPage + 1 }} / {{ MANUAL_PAGE_COUNT }} 页 · 每页
+            {{ MANUAL_SLOTS_PER_PAGE }} 格
+          </div>
+        </div>
+        <div class="flex flex-wrap justify-center gap-2 px-3">
+          <button
+            v-for="page in MANUAL_PAGE_COUNT"
+            :key="page"
+            class="min-w-10 px-3 py-1.5 rounded-full border text-xs tracking-[0.18em] transition-all duration-200 cursor-pointer"
+            :class="
+              currentPage === page - 1
+                ? 'border-gal-text-pink bg-gal-text-pink text-white shadow-[0_8px_22px_rgba(212,132,154,0.22)]'
+                : 'border-gal-border bg-white/60 text-gal-text-sub hover:border-gal-border-hover hover:text-gal-text'
+            "
+            @click="currentPage = page - 1"
+          >
+            {{ String(page).padStart(2, '0') }}
+          </button>
+        </div>
+      </div>
+
       <p
         v-if="error"
         class="text-red-500 text-center text-sm mb-4 bg-red-500/10 p-2 rounded"
       >
         {{ error }}
+      </p>
+      <p
+        v-else-if="!canCreateSave"
+        class="text-gal-text-sub text-center text-sm mb-4 bg-black/4 p-2 rounded tracking-[0.08em]"
+      >
+        当前不在游戏流程中，只能读档或管理已有存档，不能新建/覆盖存档。
       </p>
 
       <div
@@ -66,7 +102,7 @@
           <div
             class="flex items-center justify-center w-12 bg-gal-border/50 border-r border-gal-border font-serif text-2xl font-bold text-gal-text-pink/80 group-[.border-dashed]:text-gal-text-sub group-[.border-dashed]:opacity-40"
           >
-            {{ String(slot.index).padStart(2, '0') }}
+            {{ String(slot.localIndex + 1).padStart(2, '0') }}
           </div>
 
           <template v-if="slot.data">
@@ -90,6 +126,11 @@
                 </button>
                 <button
                   class="px-4 py-1 text-xs tracking-widest bg-transparent border border-gal-border rounded text-gal-text-light cursor-pointer transition-colors duration-200 hover:bg-gal-bg-panel-hover hover:border-gal-border-hover hover:text-gal-text-pink-hover"
+                  :disabled="!canCreateSave"
+                  :class="{
+                    'opacity-45 cursor-not-allowed pointer-events-none':
+                      !canCreateSave,
+                  }"
                   @click="doSave(slot.index, 'manual')"
                 >
                   覆盖
@@ -105,7 +146,12 @@
           </template>
           <template v-else>
             <div
-              class="flex-1 flex flex-col justify-center items-center cursor-pointer p-4"
+              class="flex-1 flex flex-col justify-center items-center p-4 transition-opacity duration-200"
+              :class="
+                canCreateSave
+                  ? 'cursor-pointer'
+                  : 'cursor-not-allowed opacity-45 pointer-events-none'
+              "
               @click="doSave(slot.index, 'manual')"
             >
               <div
@@ -131,20 +177,35 @@ import { useNavigator } from '../app/navigator'
 import type { SaveMeta } from '../shared/types/engine'
 import GalButton from '../components/ui/GalButton.vue'
 
-const { goBack, navigateTo } = useNavigator()
+const { goBack, navigateTo, state: navigationState } = useNavigator()
 const facade = useGalgameFacade()
 
 const slots = ref<SaveMeta[]>([])
 const loading = ref(false)
 const error = ref('')
+const currentPage = ref(0)
+const canCreateSave = ref(false)
 
-// 固定显示 12 个存档位
+const MANUAL_PAGE_COUNT = 20
+const MANUAL_SLOTS_PER_PAGE = 10
+const TOTAL_MANUAL_SLOTS = MANUAL_PAGE_COUNT * MANUAL_SLOTS_PER_PAGE
+
 const displaySlots = computed(() => {
-  const result = []
-  for (let i = 0; i < 12; i++) {
-    const data = slots.value.find((s) => s.slot === i && s.kind === 'manual')
-    result.push({ index: i, data })
+  const result: Array<{
+    index: number
+    localIndex: number
+    data?: SaveMeta
+  }> = []
+  const start = currentPage.value * MANUAL_SLOTS_PER_PAGE
+
+  for (let i = 0; i < MANUAL_SLOTS_PER_PAGE; i++) {
+    const slotIndex = start + i
+    const data = slots.value.find(
+      (s) => s.slot === slotIndex && s.kind === 'manual',
+    )
+    result.push({ index: slotIndex, localIndex: i, data })
   }
+
   return result
 })
 
@@ -152,7 +213,19 @@ async function refresh() {
   loading.value = true
   error.value = ''
   try {
-    slots.value = await facade.listSaves()
+    const state = facade.getState()
+    const navigationStack = navigationState.stack
+    const previousScreen = navigationStack[navigationStack.length - 1]
+    const cameFromGame = previousScreen === 'game'
+    canCreateSave.value =
+      cameFromGame &&
+      state.runtime.scriptId.trim().length > 0 &&
+      state.runtime.sceneId.trim().length > 0 &&
+      state.runtime.commandIndex >= 0
+
+    slots.value = (await facade.listSaves()).filter(
+      (slot) => slot.kind !== 'manual' || slot.slot < TOTAL_MANUAL_SLOTS,
+    )
   } catch (e) {
     error.value = e instanceof Error ? e.message : String(e)
   } finally {
@@ -160,7 +233,22 @@ async function refresh() {
   }
 }
 
+async function doQuickSave() {
+  if (!canCreateSave.value) {
+    error.value = '当前不在可存档的游戏流程中'
+    return
+  }
+
+  await facade.quickSave(0)
+  await refresh()
+}
+
 async function doSave(slot: number, kind: SaveMeta['kind'] = 'manual') {
+  if (!canCreateSave.value) {
+    error.value = '当前不在可存档的游戏流程中'
+    return
+  }
+
   await facade.save(slot, kind)
   await refresh()
 }

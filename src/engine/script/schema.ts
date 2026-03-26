@@ -15,6 +15,7 @@ export type ScriptCommandType =
   | 'label'
   | 'call'
   | 'return'
+  | 'script_jump'
   | 'end'
   | 'set'
   | 'inc'
@@ -80,4 +81,11 @@ export interface IRCommand {
   payload: Record<string, JsonValue>
   next?: string
   line?: number
+}
+
+export interface CallFrame {
+  scriptId: string
+  sceneId: string
+  commandId: string
+  commandIndex: number
 }

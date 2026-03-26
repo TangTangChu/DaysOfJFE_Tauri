@@ -11,7 +11,7 @@
       @click.stop
     >
       <div
-        class="gal-panel px-10 py-8 min-w-[360px] max-w-[420px] flex flex-col items-center text-center shadow-2xl"
+        class="gal-panel px-10 py-8 min-w-90 max-w-105 flex flex-col items-center text-center shadow-2xl"
         @click.stop
       >
         <h3

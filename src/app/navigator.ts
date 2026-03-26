@@ -1,6 +1,12 @@
 import { reactive, readonly, computed, type DeepReadonly } from 'vue'
 
-export type ScreenId = 'title' | 'game' | 'saves' | 'settings' | 'backlog'
+export type ScreenId =
+  | 'title'
+  | 'game'
+  | 'saves'
+  | 'settings'
+  | 'backlog'
+  | 'editor'
 export interface NavigationHooks {
   onBeforeLeave?: (from: ScreenId, to: ScreenId) => boolean | Promise<boolean>
   onAfterEnter?: (from: ScreenId, to: ScreenId) => void

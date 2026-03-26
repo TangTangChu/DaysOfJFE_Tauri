@@ -4,7 +4,9 @@ import { useGalgameFacade } from '../app/bootstrap'
 import { useNavigator } from '../app/navigator'
 import type { GameSettings } from '../shared/types/engine'
 import GalButton from '../components/ui/GalButton.vue'
+import GalSlider from '../components/ui/GalSlider.vue'
 import GalTabs from '../components/ui/GalTabs.vue'
+import GalToggle from '../components/ui/GalToggle.vue'
 
 const facade = useGalgameFacade()
 const { goBack } = useNavigator()
@@ -118,13 +120,11 @@ function fmtPct(v: number) {
                     >Master</span
                   ></label
                 >
-                <input
-                  type="range"
-                  class="gal-range"
-                  v-model.number="model.audio.master"
-                  min="0"
-                  max="1"
-                  step="0.01"
+                <GalSlider
+                  v-model="model.audio.master"
+                  :min="0"
+                  :max="1"
+                  :step="0.01"
                 />
                 <span
                   class="w-14 text-right text-sm text-gal-text-light tracking-[0.05em] font-bold tabular-nums"
@@ -137,13 +137,11 @@ function fmtPct(v: number) {
                   class="w-45 shrink-0 text-[15px] text-gal-text tracking-[0.08em] font-sans font-medium"
                   >BGM</label
                 >
-                <input
-                  type="range"
-                  class="gal-range"
-                  v-model.number="model.audio.bgm"
-                  min="0"
-                  max="1"
-                  step="0.01"
+                <GalSlider
+                  v-model="model.audio.bgm"
+                  :min="0"
+                  :max="1"
+                  :step="0.01"
                 />
                 <span
                   class="w-14 text-right text-sm text-gal-text-light tracking-[0.05em] font-bold tabular-nums"
@@ -159,13 +157,11 @@ function fmtPct(v: number) {
                     >Voice</span
                   ></label
                 >
-                <input
-                  type="range"
-                  class="gal-range"
-                  v-model.number="model.audio.voice"
-                  min="0"
-                  max="1"
-                  step="0.01"
+                <GalSlider
+                  v-model="model.audio.voice"
+                  :min="0"
+                  :max="1"
+                  :step="0.01"
                 />
                 <span
                   class="w-14 text-right text-sm text-gal-text-light tracking-[0.05em] font-bold tabular-nums"
@@ -181,13 +177,11 @@ function fmtPct(v: number) {
                     >SFX</span
                   ></label
                 >
-                <input
-                  type="range"
-                  class="gal-range"
-                  v-model.number="model.audio.sfx"
-                  min="0"
-                  max="1"
-                  step="0.01"
+                <GalSlider
+                  v-model="model.audio.sfx"
+                  :min="0"
+                  :max="1"
+                  :step="0.01"
                 />
                 <span
                   class="w-14 text-right text-sm text-gal-text-light tracking-[0.05em] font-bold tabular-nums"
@@ -203,11 +197,7 @@ function fmtPct(v: number) {
                     >Mute</span
                   ></label
                 >
-                <div
-                  class="gal-toggle"
-                  :class="{ active: model.audio.mute }"
-                  @click="model.audio.mute = !model.audio.mute"
-                />
+                <GalToggle v-model="model.audio.mute" />
               </div>
             </div>
           </div>
@@ -223,13 +213,11 @@ function fmtPct(v: number) {
                     >Size</span
                   ></label
                 >
-                <input
-                  type="range"
-                  class="gal-range"
-                  v-model.number="model.text.fontSize"
-                  min="14"
-                  max="42"
-                  step="1"
+                <GalSlider
+                  v-model="model.text.fontSize"
+                  :min="14"
+                  :max="42"
+                  :step="1"
                 />
                 <span
                   class="w-14 text-right text-sm text-gal-text-light tracking-[0.05em] font-bold tabular-nums"
@@ -245,13 +233,11 @@ function fmtPct(v: number) {
                     >Speed</span
                   ></label
                 >
-                <input
-                  type="range"
-                  class="gal-range"
-                  v-model.number="model.text.textSpeed"
-                  min="1"
-                  max="100"
-                  step="1"
+                <GalSlider
+                  v-model="model.text.textSpeed"
+                  :min="1"
+                  :max="100"
+                  :step="1"
                 />
                 <span
                   class="w-14 text-right text-sm text-gal-text-light tracking-[0.05em] font-bold tabular-nums"
@@ -267,13 +253,11 @@ function fmtPct(v: number) {
                     >Auto Delay</span
                   ></label
                 >
-                <input
-                  type="range"
-                  class="gal-range"
-                  v-model.number="model.text.autoDelayMs"
-                  min="200"
-                  max="5000"
-                  step="100"
+                <GalSlider
+                  v-model="model.text.autoDelayMs"
+                  :min="200"
+                  :max="5000"
+                  :step="100"
                 />
                 <span
                   class="w-14 text-right text-sm text-gal-text-light tracking-[0.05em] font-bold tabular-nums"
@@ -294,13 +278,7 @@ function fmtPct(v: number) {
                     >Skip Read Only</span
                   ></label
                 >
-                <div
-                  class="gal-toggle"
-                  :class="{ active: model.system.skipReadOnly }"
-                  @click="
-                    model.system.skipReadOnly = !model.system.skipReadOnly
-                  "
-                />
+                <GalToggle v-model="model.system.skipReadOnly" />
               </div>
 
               <div class="flex items-center gap-5">
@@ -311,14 +289,7 @@ function fmtPct(v: number) {
                     >Auto Stop on Choice</span
                   ></label
                 >
-                <div
-                  class="gal-toggle"
-                  :class="{ active: model.system.autoModeInterruptOnChoice }"
-                  @click="
-                    model.system.autoModeInterruptOnChoice =
-                      !model.system.autoModeInterruptOnChoice
-                  "
-                />
+                <GalToggle v-model="model.system.autoModeInterruptOnChoice" />
               </div>
             </div>
           </div>

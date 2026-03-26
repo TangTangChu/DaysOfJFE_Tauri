@@ -158,6 +158,19 @@ struct ImportSaveInput {
     overwrite: Option<bool>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct ReadTextFileInput {
+    path: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct WriteTextFileInput {
+    path: String,
+    content: String,
+}
+
 fn app_data_dir(app: &tauri::AppHandle) -> Result<PathBuf, ApiError> {
     let dir = app
         .path()
@@ -277,6 +290,23 @@ fn save_settings(app: tauri::AppHandle, settings: Value) -> Result<(), ApiError>
     let path = settings_path(&app)?;
     let bytes = serde_json::to_vec_pretty(&settings)?;
     atomic_write(&path, &bytes)
+}
+
+#[tauri::command]
+fn read_text_file(input: ReadTextFileInput) -> Result<String, ApiError> {
+    let path = PathBuf::from(input.path);
+    if !path.exists() {
+        return Err(ApiError::new("FILE_NOT_FOUND", "文件不存在"));
+    }
+    Ok(fs::read_to_string(path)?)
+}
+
+#[tauri::command]
+fn write_text_file(input: WriteTextFileInput) -> Result<String, ApiError> {
+    let path = PathBuf::from(&input.path);
+    let bytes = input.content.into_bytes();
+    atomic_write(&path, &bytes)?;
+    Ok(path.to_string_lossy().into_owned())
 }
 
 #[tauri::command]
@@ -527,10 +557,13 @@ fn import_save(app: tauri::AppHandle, input: ImportSaveInput) -> Result<Vec<Save
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             load_settings,
             save_settings,
+            read_text_file,
+            write_text_file,
             list_save_slots,
             save_snapshot,
             load_snapshot,
