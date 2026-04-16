@@ -1,74 +1,26 @@
 <script setup lang="ts">
 const props = defineProps<{
-  modelValue: boolean
-}>()
+    modelValue: boolean;
+}>();
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', val: boolean): void
-}>()
+    (e: "update:modelValue", val: boolean): void;
+}>();
 
 function toggle() {
-  emit('update:modelValue', !props.modelValue)
+    emit("update:modelValue", !props.modelValue);
 }
 </script>
 
 <template>
-  <button
-    type="button"
-    class="gal-toggle"
-    :class="{ active: modelValue }"
-    @click="toggle"
-  />
+    <button
+        type="button"
+        class="relative inline-block shrink-0 w-13 h-8 rounded-2xl border-2 cursor-pointer transition-all duration-200 ease-[cubic-bezier(0.2,0,0,1)] p-0 box-border after:content-[''] after:absolute after:rounded-full after:transition-all after:duration-200 after:ease-[cubic-bezier(0.2,0,0,1)] hover:after:shadow-[0_0_0_8px_rgba(82,67,71,0.08)]"
+        :class="[
+            modelValue
+                ? 'bg-md-primary border-md-primary after:w-6 after:h-6 after:top-0.5 after:left-5.5 after:bg-md-on-primary hover:after:bg-md-primary-container hover:after:shadow-[0_0_0_8px_rgba(212,132,154,0.12)]'
+                : 'bg-md-surface-container-highest border-md-outline after:w-4 after:h-4 after:top-1.5 after:left-1.5 after:bg-md-outline hover:after:bg-md-on-surface-variant',
+        ]"
+        @click="toggle"
+    />
 </template>
-
-<style scoped>
-.gal-toggle {
-  position: relative;
-  width: 52px;
-  height: 32px;
-  border-radius: 16px;
-  background: var(--color-md-surface-container-highest);
-  border: 2px solid var(--color-md-outline);
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-  display: inline-block;
-  box-sizing: border-box;
-  padding: 0;
-  flex-shrink: 0;
-}
-
-.gal-toggle::after {
-  content: '';
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--color-md-outline);
-  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
-}
-
-.gal-toggle:hover::after {
-  background: var(--color-md-on-surface-variant);
-  box-shadow: 0 0 0 8px rgba(82, 67, 71, 0.08);
-}
-
-.gal-toggle.active {
-  background: var(--color-md-primary);
-  border-color: var(--color-md-primary);
-}
-
-.gal-toggle.active::after {
-  width: 24px;
-  height: 24px;
-  top: 2px;
-  left: 22px;
-  background: var(--color-md-on-primary);
-}
-
-.gal-toggle.active:hover::after {
-  background: var(--color-md-primary-container);
-  box-shadow: 0 0 0 8px rgba(212, 132, 154, 0.12);
-}
-</style>
